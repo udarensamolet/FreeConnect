@@ -13,7 +13,7 @@ import { MyProjectsComponent } from './components/my-projects/my-projects.compon
 import { ProposalsComponent } from './components/proposals/proposals.component';
 import { TaskDetailsComponent } from './components/task-details/task-details.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'projects', component: ProjectsComponent },
   { path: 'projects/:id', component: ProjectDetailsComponent },
