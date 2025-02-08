@@ -1,0 +1,39 @@
+# Ignore IDE and editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore node_modules (dependencies)
+node_modules/
+
+# Ignore Angular build and cache files
+.angular/
+
+# Ignore environment files (if they contain sensitive information)
+src/environments/environment*.ts
+
+# Ignore build and distribution folders
+dist/
+out-tsc/
+
+# Ignore compiled files
+*.js
+*.js.map
+*.d.ts
+
+# Ignore logs and debug files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ignore temporary files
+tmp/
+temp/
+
+# Ignore coverage reports
+coverage/
+
+# Ignore generated typings
+typings/
