@@ -12,6 +12,7 @@ import (
 type UserService interface {
 	Register(user *models.User, plainPassword string) error
 	GetUserByID(id uint) (*models.User, error)
+	UpdateUser(user *models.User) error
 }
 
 type userService struct {
@@ -23,12 +24,12 @@ func NewUserService(repo repositories.UserRepository) UserService {
 }
 
 func (s *userService) Register(user *models.User, plainPassword string) error {
-	// Check for duplicate email.
+	// Check if email already exists.
 	if existingUser, _ := s.repo.FindByEmail(user.Email); existingUser != nil {
 		return errors.New("user with that email already exists")
 	}
 
-	// Hash the plain-text password.
+	// Hash the password.
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(plainPassword), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -39,4 +40,9 @@ func (s *userService) Register(user *models.User, plainPassword string) error {
 
 func (s *userService) GetUserByID(id uint) (*models.User, error) {
 	return s.repo.FindByID(id)
+}
+
+func (s *userService) UpdateUser(user *models.User) error {
+	// (Optional: add validations here)
+	return s.repo.Update(user)
 }

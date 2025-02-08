@@ -4,12 +4,12 @@ import (
 	"time"
 )
 
-// User represents a user in the FreeConnect system.
+// User represents the users table.
 type User struct {
 	ID           uint      `gorm:"column:user_id;primaryKey" json:"user_id"`
 	Name         string    `gorm:"type:varchar(255);not null" json:"name"`
 	Email        string    `gorm:"type:varchar(255);unique;not null" json:"email"`
-	PasswordHash string    `gorm:"type:text;not null" json:"-"` // never return the hash in responses
+	PasswordHash string    `gorm:"type:text;not null" json:"-"` // Do not expose in responses
 	Role         string    `gorm:"type:varchar(50);not null;check:role IN ('admin','client','freelancer')" json:"role"`
 	Bio          string    `gorm:"type:text" json:"bio,omitempty"`
 	CompanyName  string    `gorm:"type:varchar(255)" json:"company_name,omitempty"`
