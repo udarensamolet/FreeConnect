@@ -5,6 +5,7 @@ import (
 
 	"FreeConnect/internal/config"
 	"FreeConnect/internal/controllers"
+	"FreeConnect/internal/middleware"
 	"FreeConnect/internal/models"
 	"FreeConnect/internal/repositories"
 	"FreeConnect/internal/services"
@@ -13,19 +14,19 @@ import (
 )
 
 func main() {
-	// Load configuration.
+	// Load configuration
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Fatalf("Failed to load config: %v", err)
 	}
 
-	// Connect to PostgreSQL.
+	// Connect to PostgreSQL
 	db, err := models.ConnectDatabase(cfg)
 	if err != nil {
 		log.Fatalf("Database connection failed: %v", err)
 	}
 
-	// Auto-migrate all models.
+	// Auto-migrate all models
 	if err := db.AutoMigrate(
 		&models.User{},
 		&models.Project{},
@@ -35,112 +36,157 @@ func main() {
 		&models.Transaction{},
 		&models.Task{},
 		&models.Notification{},
+		&models.Invoice{},
 	); err != nil {
 		log.Fatalf("AutoMigrate failed: %v", err)
 	}
 
-	// Initialize repositories, services, and controllers for each module.
-
-	// Users.
+	// Initialize repositories
 	userRepo := repositories.NewUserRepository(db)
-	userService := services.NewUserService(userRepo)
-	userController := controllers.NewUserController(userService)
-
-	// Projects.
 	projectRepo := repositories.NewProjectRepository(db)
-	projectService := services.NewProjectService(projectRepo)
-	projectController := controllers.NewProjectController(projectService)
-
-	// Skills.
 	skillRepo := repositories.NewSkillRepository(db)
-	skillService := services.NewSkillService(skillRepo)
-	skillController := controllers.NewSkillController(skillService)
-
-	// Proposals.
 	proposalRepo := repositories.NewProposalRepository(db)
-	proposalService := services.NewProposalService(proposalRepo)
-	proposalController := controllers.NewProposalController(proposalService)
-
-	// Reviews.
 	reviewRepo := repositories.NewReviewRepository(db)
-	reviewService := services.NewReviewService(reviewRepo)
-	reviewController := controllers.NewReviewController(reviewService)
-
-	// Transactions.
 	transactionRepo := repositories.NewTransactionRepository(db)
-	transactionService := services.NewTransactionService(transactionRepo)
-	transactionController := controllers.NewTransactionController(transactionService)
-
-	// Tasks.
 	taskRepo := repositories.NewTaskRepository(db)
-	taskService := services.NewTaskService(taskRepo)
-	taskController := controllers.NewTaskController(taskService)
-
-	// Notifications.
 	notificationRepo := repositories.NewNotificationRepository(db)
-	notificationService := services.NewNotificationService(notificationRepo)
-	notificationController := controllers.NewNotificationController(notificationService)
+	invoiceRepo := repositories.NewInvoiceRepository(db)
 
-	// Setup Gin router and register routes.
+	// Initialize services
+	userService := services.NewUserService(userRepo)
+	projectService := services.NewProjectService(projectRepo)
+	skillService := services.NewSkillService(skillRepo)
+	proposalService := services.NewProposalService(proposalRepo)
+	reviewService := services.NewReviewService(reviewRepo)
+	transactionService := services.NewTransactionService(transactionRepo)
+	taskService := services.NewTaskService(taskRepo)
+	notificationService := services.NewNotificationService(notificationRepo)
+	invoiceService := services.NewInvoiceService(invoiceRepo)
+
+	// Initialize controllers
+	userController := controllers.NewUserController(userService)
+	projectController := controllers.NewProjectController(projectService)
+	skillController := controllers.NewSkillController(skillService)
+	proposalController := controllers.NewProposalController(proposalService)
+	reviewController := controllers.NewReviewController(reviewService)
+	transactionController := controllers.NewTransactionController(transactionService)
+	taskController := controllers.NewTaskController(taskService)
+	notificationController := controllers.NewNotificationController(notificationService)
+	invoiceController := controllers.NewInvoiceController(invoiceService)
+
+	// ---------- NEW AUTH SETUP ----------
+	jwtService := services.NewJWTService()
+	authController := controllers.NewAuthController(userService, jwtService)
+	// Admin controller
+	adminController := controllers.NewAdminController(userRepo)
+	// Real-time SSE controller
+	rtc := controllers.NewRealTimeController()
+
+	// Setup Gin
 	router := gin.Default()
 	api := router.Group("/api")
+
+	// PUBLIC routes ------------------
+	api.POST("/register", userController.RegisterUser)
+	api.POST("/login", authController.Login)
+
+	// (OPTIONAL) SSE
+	rtc.RegisterRoutes(api)
+
+	// PROTECTED routes (must have valid JWT) ---
+	protected := api.Group("/")
+	protected.Use(middleware.AuthMiddleware(jwtService)) // requires token
 	{
-		// User routes.
-		api.POST("/register", userController.RegisterUser)
-		api.GET("/users/:id", userController.GetUser)
-		api.PUT("/users/:id", userController.UpdateUser)
-		api.PUT("/users/:id/skills", userController.UpdateUserSkills)
+		// Example: only "client" can create projects
+		clientOnly := protected.Group("/client")
+		clientOnly.Use(middleware.RoleMiddleware("client"))
+		{
+			// Project routes
+			clientOnly.POST("/projects", projectController.CreateProject)
+			// More client-only actions...
+		}
 
-		// Project routes.
-		api.POST("/projects", projectController.CreateProject)
-		api.GET("/projects", projectController.GetAllProjects)
-		api.GET("/projects/:id", projectController.GetProject)
-		api.PUT("/projects/:id", projectController.UpdateProject)
-		api.DELETE("/projects/:id", projectController.DeleteProject)
+		// Example: only "freelancer" can create proposals
+		freelancerOnly := protected.Group("/freelancer")
+		freelancerOnly.Use(middleware.RoleMiddleware("freelancer"))
+		{
+			freelancerOnly.POST("/proposals", proposalController.CreateProposal)
+			// More freelancer-only endpoints...
+		}
 
-		// Skill routes.
-		api.POST("/skills", skillController.CreateSkill)
-		api.GET("/skills", skillController.GetAllSkills)
-		api.GET("/skills/:id", skillController.GetSkill)
-		api.PUT("/skills/:id", skillController.UpdateSkill)
-		api.DELETE("/skills/:id", skillController.DeleteSkill)
+		// Example: Admin routes
+		adminOnly := protected.Group("/admin")
+		adminOnly.Use(middleware.RoleMiddleware("admin"))
+		{
+			adminOnly.GET("/users", adminController.ListAllUsers)
+			adminOnly.PUT("/users/:id/approve", adminController.ApproveUser)
+			// etc...
+		}
 
-		// Proposal routes.
-		api.POST("/proposals", proposalController.CreateProposal)
-		api.GET("/proposals/:id", proposalController.GetProposal)
-		api.GET("/projects/:id/proposals", proposalController.GetProposalsByProject)
-		api.PUT("/proposals/:id", proposalController.UpdateProposal)
-		api.DELETE("/proposals/:id", proposalController.DeleteProposal)
+		// ---------- Common routes (any logged-in user) ----------
+		// e.g. user updates
+		protected.GET("/users/:id", userController.GetUser)
+		protected.PUT("/users/:id", userController.UpdateUser)
+		protected.PUT("/users/:id/skills", userController.UpdateUserSkills)
 
-		// Review routes.
-		api.POST("/reviews", reviewController.CreateReview)
-		api.GET("/reviews/:id", reviewController.GetReview)
-		api.GET("/projects/:id/reviews", reviewController.GetReviewsByProject)
-		api.PUT("/reviews/:id", reviewController.UpdateReview)
-		api.DELETE("/reviews/:id", reviewController.DeleteReview)
+		// Project (some might require role checks if you want)
+		protected.GET("/projects", projectController.GetAllProjects)
+		protected.GET("/projects/:id", projectController.GetProject)
+		protected.PUT("/projects/:id", projectController.UpdateProject)
+		protected.DELETE("/projects/:id", projectController.DeleteProject)
 
-		// Transaction routes.
-		api.POST("/transactions", transactionController.CreateTransaction)
-		api.GET("/transactions/:id", transactionController.GetTransaction)
-		api.GET("/projects/:id/transactions", transactionController.GetTransactionsByProject)
-		api.PUT("/transactions/:id", transactionController.UpdateTransaction)
-		api.DELETE("/transactions/:id", transactionController.DeleteTransaction)
+		// Skills
+		protected.POST("/skills", skillController.CreateSkill)
+		protected.GET("/skills", skillController.GetAllSkills)
+		protected.GET("/skills/:id", skillController.GetSkill)
+		protected.PUT("/skills/:id", skillController.UpdateSkill)
+		protected.DELETE("/skills/:id", skillController.DeleteSkill)
 
-		// Task routes.
-		api.POST("/tasks", taskController.CreateTask)
-		api.GET("/tasks/:id", taskController.GetTask)
-		api.GET("/projects/:id/tasks", taskController.GetTasksByProject)
-		api.PUT("/tasks/:id", taskController.UpdateTask)
-		api.DELETE("/tasks/:id", taskController.DeleteTask)
+		// Proposals
+		protected.GET("/proposals/:id", proposalController.GetProposal)
+		protected.GET("/projects/:id/proposals", proposalController.GetProposalsByProject)
+		protected.PUT("/proposals/:id", proposalController.UpdateProposal)
+		protected.DELETE("/proposals/:id", proposalController.DeleteProposal)
+		// Accept proposal
+		protected.POST("/proposals/:id/accept", proposalController.AcceptProposal)
 
-		// Notification routes.
-		api.POST("/notifications", notificationController.CreateNotification)
-		api.GET("/notifications/:id", notificationController.GetNotification)
-		api.GET("/notifications/user/:user_id", notificationController.GetNotificationsByUser)
-		api.PUT("/notifications/:id", notificationController.UpdateNotification)
-		api.DELETE("/notifications/:id", notificationController.DeleteNotification)
+		// Reviews
+		protected.POST("/reviews", reviewController.CreateReview)
+		protected.GET("/reviews/:id", reviewController.GetReview)
+		protected.GET("/projects/:id/reviews", reviewController.GetReviewsByProject)
+		protected.PUT("/reviews/:id", reviewController.UpdateReview)
+		protected.DELETE("/reviews/:id", reviewController.DeleteReview)
+
+		// Transactions
+		protected.POST("/transactions", transactionController.CreateTransaction)
+		protected.GET("/transactions/:id", transactionController.GetTransaction)
+		protected.GET("/projects/:id/transactions", transactionController.GetTransactionsByProject)
+		protected.PUT("/transactions/:id", transactionController.UpdateTransaction)
+		protected.DELETE("/transactions/:id", transactionController.DeleteTransaction)
+
+		// Tasks
+		protected.POST("/tasks", taskController.CreateTask)
+		protected.GET("/tasks/:id", taskController.GetTask)
+		protected.GET("/projects/:id/tasks", taskController.GetTasksByProject)
+		protected.PUT("/tasks/:id", taskController.UpdateTask)
+		protected.DELETE("/tasks/:id", taskController.DeleteTask)
+
+		// Notifications
+		protected.POST("/notifications", notificationController.CreateNotification)
+		protected.GET("/notifications/:id", notificationController.GetNotification)
+		protected.GET("/notifications/user/:user_id", notificationController.GetNotificationsByUser)
+		protected.PUT("/notifications/:id", notificationController.UpdateNotification)
+		protected.DELETE("/notifications/:id", notificationController.DeleteNotification)
+
+		// Invoices
+		protected.POST("/invoices", invoiceController.CreateInvoice)
+		protected.GET("/invoices/:id", invoiceController.GetInvoice)
+		protected.GET("/projects/:id/invoices", invoiceController.GetInvoicesByProject)
+		protected.PUT("/invoices/:id", invoiceController.UpdateInvoice)
+		protected.DELETE("/invoices/:id", invoiceController.DeleteInvoice)
 	}
 
+	// Run server
 	log.Printf("Server running on port %s", cfg.Port)
 	if err := router.Run(":" + cfg.Port); err != nil {
 		log.Fatalf("Server failed to run: %v", err)

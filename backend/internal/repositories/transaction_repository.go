@@ -12,10 +12,15 @@ type TransactionRepository interface {
 	FindByProject(projectID uint) ([]models.Transaction, error)
 	Update(transaction *models.Transaction) error
 	Delete(id uint) error
+	GetDB() *gorm.DB
 }
 
 type transactionRepository struct {
 	db *gorm.DB
+}
+
+func (r *transactionRepository) GetDB() *gorm.DB {
+	return r.db
 }
 
 func NewTransactionRepository(db *gorm.DB) TransactionRepository {

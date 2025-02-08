@@ -136,3 +136,25 @@ func (pc *ProposalController) DeleteProposal(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Proposal deleted successfully"})
 }
+
+func (pc *ProposalController) AcceptProposal(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid proposal ID"})
+		return
+	}
+
+	proposal, err := pc.proposalService.GetProposalByID(uint(id))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Proposal not found"})
+		return
+	}
+
+	if err := pc.proposalService.AcceptProposal(proposal); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Proposal accepted successfully"})
+}
