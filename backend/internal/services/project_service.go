@@ -22,7 +22,7 @@ func NewProjectService(repo repositories.ProjectRepository) ProjectService {
 }
 
 func (s *projectService) CreateProject(project *models.Project) error {
-	// Optionally, validate project fields (e.g., budget > 0, duration > 0)
+	// Optionally validate project fields (e.g., budget > 0, duration > 0).
 	return s.repo.Create(project)
 }
 

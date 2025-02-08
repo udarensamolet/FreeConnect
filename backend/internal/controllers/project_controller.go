@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"FreeConnect/internal/models"
 	"FreeConnect/internal/services"
@@ -18,7 +19,8 @@ func NewProjectController(ps services.ProjectService) *ProjectController {
 	return &ProjectController{projectService: ps}
 }
 
-// CreateProject handles POST /api/projects
+// CreateProject handles POST /api/projects.
+// Now freelancer_id is mandatory.
 func (pc *ProjectController) CreateProject(c *gin.Context) {
 	var payload struct {
 		Title        string  `json:"title" binding:"required"`
@@ -27,7 +29,7 @@ func (pc *ProjectController) CreateProject(c *gin.Context) {
 		Duration     int     `json:"duration" binding:"required"`
 		Status       string  `json:"status"` // optional; default 'open'
 		ClientID     uint    `json:"client_id" binding:"required"`
-		FreelancerID uint    `json:"freelancer_id" binding:"required"` // Now mandatory
+		FreelancerID uint    `json:"freelancer_id" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -41,22 +43,20 @@ func (pc *ProjectController) CreateProject(c *gin.Context) {
 		Duration:     payload.Duration,
 		Status:       payload.Status,
 		ClientID:     payload.ClientID,
-		FreelancerID: &payload.FreelancerID, // pointer if defined as such in your model
+		FreelancerID: &payload.FreelancerID,
+		CreationDate: time.Now(),
 	}
-
 	if project.Status == "" {
 		project.Status = "open"
 	}
-
 	if err := pc.projectService.CreateProject(&project); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusCreated, gin.H{"project": project})
 }
 
-// GetProject handles GET /api/projects/:id
+// GetProject handles GET /api/projects/:id.
 func (pc *ProjectController) GetProject(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -64,28 +64,25 @@ func (pc *ProjectController) GetProject(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
 		return
 	}
-
 	project, err := pc.projectService.GetProjectByID(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"project": project})
 }
 
-// GetAllProjects handles GET /api/projects
+// GetAllProjects handles GET /api/projects.
 func (pc *ProjectController) GetAllProjects(c *gin.Context) {
 	projects, err := pc.projectService.GetAllProjects()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"projects": projects})
 }
 
-// UpdateProject handles PUT /api/projects/:id
+// UpdateProject handles PUT /api/projects/:id.
 func (pc *ProjectController) UpdateProject(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -93,15 +90,11 @@ func (pc *ProjectController) UpdateProject(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
 		return
 	}
-
-	// Retrieve current project.
 	project, err := pc.projectService.GetProjectByID(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
 		return
 	}
-
-	// Bind updated data.
 	var payload struct {
 		Title        string  `json:"title"`
 		Description  string  `json:"description"`
@@ -115,7 +108,6 @@ func (pc *ProjectController) UpdateProject(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	if payload.Title != "" {
 		project.Title = payload.Title
 	}
@@ -137,16 +129,14 @@ func (pc *ProjectController) UpdateProject(c *gin.Context) {
 	if payload.FreelancerID != nil {
 		project.FreelancerID = payload.FreelancerID
 	}
-
 	if err := pc.projectService.UpdateProject(project); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"project": project})
 }
 
-// DeleteProject handles DELETE /api/projects/:id
+// DeleteProject handles DELETE /api/projects/:id.
 func (pc *ProjectController) DeleteProject(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -154,11 +144,9 @@ func (pc *ProjectController) DeleteProject(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
 		return
 	}
-
 	if err := pc.projectService.DeleteProject(uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{"message": "Project deleted successfully"})
 }

@@ -25,12 +25,9 @@ func main() {
 		log.Fatalf("Database connection failed: %v", err)
 	}
 
-	// Auto-migrate the User and Project models.
-	if err := db.AutoMigrate(&models.User{}); err != nil {
-		log.Fatalf("User migration failed: %v", err)
-	}
-	if err := db.AutoMigrate(&models.Project{}); err != nil {
-		log.Fatalf("Project migration failed: %v", err)
+	// Auto-migrate all models.
+	if err := db.AutoMigrate(&models.User{}, &models.Project{}, &models.Skill{}); err != nil {
+		log.Fatalf("AutoMigrate failed: %v", err)
 	}
 
 	// Initialize repositories, services, and controllers.
@@ -42,6 +39,10 @@ func main() {
 	projectService := services.NewProjectService(projectRepo)
 	projectController := controllers.NewProjectController(projectService)
 
+	skillRepo := repositories.NewSkillRepository(db)
+	skillService := services.NewSkillService(skillRepo)
+	skillController := controllers.NewSkillController(skillService)
+
 	// Setup Gin router and register routes.
 	router := gin.Default()
 	api := router.Group("/api")
@@ -50,6 +51,7 @@ func main() {
 		api.POST("/register", userController.RegisterUser)
 		api.GET("/users/:id", userController.GetUser)
 		api.PUT("/users/:id", userController.UpdateUser)
+		api.POST("/users/:id/skills", userController.UpdateUserSkills)
 
 		// Project routes.
 		api.POST("/projects", projectController.CreateProject)
@@ -57,6 +59,13 @@ func main() {
 		api.GET("/projects/:id", projectController.GetProject)
 		api.PUT("/projects/:id", projectController.UpdateProject)
 		api.DELETE("/projects/:id", projectController.DeleteProject)
+
+		// Skill routes.
+		api.POST("/skills", skillController.CreateSkill)
+		api.GET("/skills", skillController.GetAllSkills)
+		api.GET("/skills/:id", skillController.GetSkill)
+		api.PUT("/skills/:id", skillController.UpdateSkill)
+		api.DELETE("/skills/:id", skillController.DeleteSkill)
 	}
 
 	log.Printf("Server running on port %s", cfg.Port)
