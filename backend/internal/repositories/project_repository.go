@@ -57,11 +57,10 @@ func (r *projectRepository) Create(project *models.Project) error {
 	return r.db.Create(project).Error
 }
 
-// In project_repository.go
-
 func (r *projectRepository) FindByID(id uint) (*models.Project, error) {
 	var project models.Project
-	if err := r.db.First(&project, id).Error; err != nil {
+	// If you want to preload tasks
+	if err := r.db.Preload("Tasks").First(&project, id).Error; err != nil {
 		return nil, err
 	}
 	return &project, nil

@@ -41,6 +41,12 @@ func (pc *ProposalController) CreateProposal(c *gin.Context) {
 		FreelancerID:      payload.FreelancerID,
 	}
 
+	userRole := c.GetString("userRole")
+	if userRole != "freelancer" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "Only freelancers can create proposals"})
+		return
+	}
+
 	if err := pc.proposalService.CreateProposal(&proposal); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
