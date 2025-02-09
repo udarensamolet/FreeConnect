@@ -1,0 +1,30 @@
+.navbar-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+  }
+  
+  .navbar-left, .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+  .navbar-link {
+    color: white;
+    text-decoration: none;
+    margin-right: 1rem;
+    font-size: 1rem;
+  }
+  
+  .navbar-link:hover {
+    text-decoration: underline;
+  }
+
+  .navbar-toolbar {
+    background-color: red !important;
+    border: 2px solid yellow;
+  }

@@ -1,0 +1,26 @@
+<div>
+    <h2>Browse Projects</h2>
+  
+    <div>
+      <input [(ngModel)]="searchText" placeholder="Search..." />
+      <input [(ngModel)]="minBudget" type="number" placeholder="Min Budget" />
+      <input [(ngModel)]="maxBudget" type="number" placeholder="Max Budget" />
+  
+      <select [(ngModel)]="status">
+        <option value="">Any status</option>
+        <option value="open">Open</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+      </select>
+  
+      <button (click)="onSearch()">Search</button>
+    </div>
+  
+    <ul>
+      <li *ngFor="let project of projects">
+        {{ project.title }} - {{ project.budget }}
+        <a [routerLink]="['/project', project.project_id]">View Details</a>
+      </li>
+    </ul>
+  </div>
+  
