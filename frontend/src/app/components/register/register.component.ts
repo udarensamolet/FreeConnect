@@ -8,13 +8,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css',
-  ],
+  styleUrls: ['./register.component.css'],
   standalone: true,
   imports: [
     CommonModule,
@@ -26,7 +27,6 @@ import { AuthService } from '../../services/auth.service';
     MatSelectModule
   ],
 })
-
 export class RegisterComponent {
   formData = {
     name: '',
@@ -36,34 +36,36 @@ export class RegisterComponent {
     confirmPassword: ''
   };
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private alertService: AlertService
+  ) {}
 
   onSubmit() {
     if (!this.formData.name) {
-      alert('Name cannot be empty');
+      ('Name cannot be empty');
       return;
     }
     if (!this.formData.email) {
-      alert('Email cannot be empty');
+      this.alertService.alert('Email cannot be empty');
       return;
     }
     if (!this.formData.password) {
-      alert('Password cannot be empty');
+      this.alertService.alert('Password cannot be empty');
       return;
     }
     if (this.formData.password !== this.formData.confirmPassword) {
-      alert('Passwords do not match!');
+      this.alertService.alert('Passwords do not match!');
       return;
     }
 
     this.authService.register(this.formData).subscribe({
       next: (response) => {
-        alert('Registration successful!');
-        console.log(response);
+        this.router.navigate(['/login']);
       },
       error: (error) => {
-        alert('Registration failed!');
-        console.error(error);
+        this.alertService.alert('Registration failed!');
       }
     });
   }
