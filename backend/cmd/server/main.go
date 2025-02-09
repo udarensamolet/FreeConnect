@@ -9,6 +9,7 @@ import (
 	"FreeConnect/internal/repositories"
 	"FreeConnect/internal/services"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -73,117 +74,94 @@ func main() {
 	notificationController := controllers.NewNotificationController(notificationService)
 	invoiceController := controllers.NewInvoiceController(invoiceService)
 
-	// ---------- NEW AUTH SETUP ----------
+	// NEW AUTH SETUP
 	jwtService := services.NewJWTService()
 	authController := controllers.NewAuthController(userService, jwtService)
+
 	// Admin controller
 	adminController := controllers.NewAdminController(userRepo)
+
 	// Real-time SSE controller
 	rtc := controllers.NewRealTimeController()
 
 	// Setup Gin
 	router := gin.Default()
+
+	// 1) USE CORS MIDDLEWARE
+	//    Adjust origins, methods, headers as needed.
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowCredentials: true, // If needed
+	}))
+
+	// 2) Define your routes
 	api := router.Group("/api")
 
-	// PUBLIC routes ------------------
+	// PUBLIC routes
 	api.POST("/register", userController.RegisterUser)
 	api.POST("/login", authController.Login)
 
 	// (OPTIONAL) SSE
 	rtc.RegisterRoutes(api)
 
-	// api routes (must have valid JWT) ---
-	//api := api.Group("/")
-	//api.Use(middleware.AuthMiddleware(jwtService)) // requires token
-	//{
-	// Example: only "client" can create projects
-	//clientOnly := api.Group("/client")
-	//clientOnly.Use(middleware.RoleMiddleware("client"))
-	//{
-	// Project routes
+	// Examples of other routes
 	api.POST("/projects", projectController.CreateProject)
-	// More client-only actions...
-	//}
-
-	//// Example: only "freelancer" can create proposals
-	//freelancerOnly := api.Group("/freelancer")
-	//freelancerOnly.Use(middleware.RoleMiddleware("freelancer"))
-	//{
 	api.POST("/proposals", proposalController.CreateProposal)
-	// More freelancer-only endpoints...
-	//}
-
-	// Example: Admin routes
-	//adminOnly := api.Group("/admin")
-	//adminOnly.Use(middleware.RoleMiddleware("admin"))
-	//{
 	api.GET("/users", adminController.ListAllUsers)
 	api.PUT("/users/:id/approve", adminController.ApproveUser)
-	// etc...
-	//}
 
-	// ---------- Common routes (any logged-in user) ----------
-	// e.g. user updates
 	api.GET("/users/:id", userController.GetUser)
 	api.PUT("/users/:id", userController.UpdateUser)
 	api.PUT("/users/:id/skills", userController.UpdateUserSkills)
 
-	// Project (some might require role checks if you want)
 	api.GET("/projects", projectController.GetAllProjects)
 	api.GET("/projects/:id", projectController.GetProject)
 	api.PUT("/projects/:id", projectController.UpdateProject)
 	api.DELETE("/projects/:id", projectController.DeleteProject)
 
-	// Skills
 	api.POST("/skills", skillController.CreateSkill)
 	api.GET("/skills", skillController.GetAllSkills)
 	api.GET("/skills/:id", skillController.GetSkill)
 	api.PUT("/skills/:id", skillController.UpdateSkill)
 	api.DELETE("/skills/:id", skillController.DeleteSkill)
 
-	// Proposals
 	api.GET("/proposals/:id", proposalController.GetProposal)
 	api.GET("/projects/:id/proposals", proposalController.GetProposalsByProject)
 	api.PUT("/proposals/:id", proposalController.UpdateProposal)
 	api.DELETE("/proposals/:id", proposalController.DeleteProposal)
-	// Accept proposal
 	api.POST("/proposals/:id/accept", proposalController.AcceptProposal)
 
-	// Reviews
 	api.POST("/reviews", reviewController.CreateReview)
 	api.GET("/reviews/:id", reviewController.GetReview)
 	api.GET("/projects/:id/reviews", reviewController.GetReviewsByProject)
 	api.PUT("/reviews/:id", reviewController.UpdateReview)
 	api.DELETE("/reviews/:id", reviewController.DeleteReview)
 
-	// Transactions
 	api.POST("/transactions", transactionController.CreateTransaction)
 	api.GET("/transactions/:id", transactionController.GetTransaction)
 	api.GET("/projects/:id/transactions", transactionController.GetTransactionsByProject)
 	api.PUT("/transactions/:id", transactionController.UpdateTransaction)
 	api.DELETE("/transactions/:id", transactionController.DeleteTransaction)
 
-	// Tasks
 	api.POST("/tasks", taskController.CreateTask)
 	api.GET("/tasks/:id", taskController.GetTask)
 	api.GET("/projects/:id/tasks", taskController.GetTasksByProject)
 	api.PUT("/tasks/:id", taskController.UpdateTask)
 	api.DELETE("/tasks/:id", taskController.DeleteTask)
 
-	// Notifications
 	api.POST("/notifications", notificationController.CreateNotification)
 	api.GET("/notifications/:id", notificationController.GetNotification)
 	api.GET("/notifications/user/:user_id", notificationController.GetNotificationsByUser)
 	api.PUT("/notifications/:id", notificationController.UpdateNotification)
 	api.DELETE("/notifications/:id", notificationController.DeleteNotification)
 
-	// Invoices
 	api.POST("/invoices", invoiceController.CreateInvoice)
 	api.GET("/invoices/:id", invoiceController.GetInvoice)
 	api.GET("/projects/:id/invoices", invoiceController.GetInvoicesByProject)
 	api.PUT("/invoices/:id", invoiceController.UpdateInvoice)
 	api.DELETE("/invoices/:id", invoiceController.DeleteInvoice)
-	//}
 
 	// Run server
 	log.Printf("Server running on port %s", cfg.Port)
