@@ -95,6 +95,7 @@ func (pc *ProjectController) UpdateProject(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
 		return
 	}
+
 	project, err := pc.projectService.GetProjectByID(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
@@ -113,6 +114,14 @@ func (pc *ProjectController) UpdateProject(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	userID := c.GetUint("id")
+	userRole := c.GetString("role")
+	if project.ClientID != userID && userRole != "admin" {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not the owner of this project"})
+		return
+	}
+
 	if payload.Title != "" {
 		project.Title = payload.Title
 	}
