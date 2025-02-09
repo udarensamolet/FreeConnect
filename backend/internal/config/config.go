@@ -15,7 +15,7 @@ type Config struct {
 func LoadConfig() (*Config, error) {
 	// Load .env file if it exists.
 	_ = godotenv.Load()
-
+	//Test comment
 	dsn := os.Getenv("DB_DSN")
 	if dsn == "" {
 		// Option A: Provide a fallback (localhost):
