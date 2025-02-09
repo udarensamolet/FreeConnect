@@ -19,15 +19,23 @@ func NewUserController(us services.UserService) *UserController {
 }
 
 // RegisterUser handles POST /api/register.
+// user_controller.go
 func (uc *UserController) RegisterUser(c *gin.Context) {
 	var payload struct {
-		Name     string `json:"name" binding:"required"`
-		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required,min=6"`
-		Role     string `json:"role" binding:"required"` // 'admin', 'client', or 'freelancer'
+		Name            string `json:"name" binding:"required"`
+		Email           string `json:"email" binding:"required,email"`
+		Password        string `json:"password" binding:"required,min=6"`
+		ConfirmPassword string `json:"confirm_password" binding:"required,min=6"`
+		Role            string `json:"role" binding:"required"` // 'admin', 'client', or 'freelancer'
 	}
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Make sure password == confirmPassword
+	if payload.Password != payload.ConfirmPassword {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Passwords do not match"})
 		return
 	}
 
@@ -36,6 +44,7 @@ func (uc *UserController) RegisterUser(c *gin.Context) {
 		Email: payload.Email,
 		Role:  payload.Role,
 	}
+	// We only store the main password in the DB (hashed), confirm_password is only for verification
 	if err := uc.userService.Register(&user, payload.Password); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
