@@ -15,4 +15,5 @@ type Project struct {
 	CreationDate time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"creation_date"`
 	ClientID     uint      `json:"client_id"`               // foreign key to users(user_id)
 	FreelancerID *uint     `json:"freelancer_id,omitempty"` // nullable FK to users(user_id)
+	Tasks        []Task
 }
