@@ -11,6 +11,7 @@ type ProjectService interface {
 	GetAllProjects() ([]models.Project, error)
 	UpdateProject(project *models.Project) error
 	DeleteProject(id uint) error
+	SearchProjects(search, minBudgetStr, maxBudgetStr, status string) ([]models.Project, error)
 }
 
 type projectService struct {
@@ -19,6 +20,12 @@ type projectService struct {
 
 func NewProjectService(repo repositories.ProjectRepository) ProjectService {
 	return &projectService{repo: repo}
+}
+
+// In project_service.go
+
+func (s *projectService) SearchProjects(search, minBudgetStr, maxBudgetStr, status string) ([]models.Project, error) {
+	return s.repo.SearchProjects(search, minBudgetStr, maxBudgetStr, status)
 }
 
 func (s *projectService) CreateProject(project *models.Project) error {

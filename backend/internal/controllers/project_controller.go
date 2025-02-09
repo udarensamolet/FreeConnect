@@ -72,9 +72,14 @@ func (pc *ProjectController) GetProject(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"project": project})
 }
 
-// GetAllProjects handles GET /api/projects.
+// GetAllProjects handles GET /api/projects?search=...&minBudget=...&maxBudget=...&status=...
 func (pc *ProjectController) GetAllProjects(c *gin.Context) {
-	projects, err := pc.projectService.GetAllProjects()
+	search := c.Query("search")
+	minBudgetStr := c.Query("minBudget")
+	maxBudgetStr := c.Query("maxBudget")
+	status := c.Query("status")
+
+	projects, err := pc.projectService.SearchProjects(search, minBudgetStr, maxBudgetStr, status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

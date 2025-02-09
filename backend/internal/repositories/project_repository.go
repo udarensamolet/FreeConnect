@@ -12,10 +12,41 @@ type ProjectRepository interface {
 	FindAll() ([]models.Project, error)
 	Update(project *models.Project) error
 	Delete(id uint) error
+	SearchProjects(search, minBudgetStr, maxBudgetStr, status string) ([]models.Project, error)
 }
 
 type projectRepository struct {
 	db *gorm.DB
+}
+
+func (r *projectRepository) SearchProjects(search, minBudgetStr, maxBudgetStr, status string) ([]models.Project, error) {
+	db := r.db
+
+	if search != "" {
+		// Filter by title or description (LIKE):
+		db = db.Where("title ILIKE ? OR description ILIKE ?", "%"+search+"%", "%"+search+"%")
+	}
+
+	if minBudgetStr != "" {
+		// Convert to float
+		db = db.Where("budget >= ?", minBudgetStr)
+	}
+
+	if maxBudgetStr != "" {
+		// Convert to float
+		db = db.Where("budget <= ?", maxBudgetStr)
+	}
+
+	if status != "" {
+		// if you want a single status or maybe multiple
+		db = db.Where("status = ?", status)
+	}
+
+	var projects []models.Project
+	if err := db.Find(&projects).Error; err != nil {
+		return nil, err
+	}
+	return projects, nil
 }
 
 func NewProjectRepository(db *gorm.DB) ProjectRepository {
@@ -25,6 +56,8 @@ func NewProjectRepository(db *gorm.DB) ProjectRepository {
 func (r *projectRepository) Create(project *models.Project) error {
 	return r.db.Create(project).Error
 }
+
+// In project_repository.go
 
 func (r *projectRepository) FindByID(id uint) (*models.Project, error) {
 	var project models.Project

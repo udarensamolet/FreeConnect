@@ -107,8 +107,6 @@ func main() {
 	rtc.RegisterRoutes(api)
 
 	// Examples of other routes
-	api.POST("/projects", projectController.CreateProject)
-	api.POST("/proposals", proposalController.CreateProposal)
 	api.GET("/users", adminController.ListAllUsers)
 	api.PUT("/users/:id/approve", adminController.ApproveUser)
 
@@ -116,6 +114,7 @@ func main() {
 	api.PUT("/users/:id", userController.UpdateUser)
 	api.PUT("/users/:id/skills", userController.UpdateUserSkills)
 
+	api.POST("/projects", projectController.CreateProject)
 	api.GET("/projects", projectController.GetAllProjects)
 	api.GET("/projects/:id", projectController.GetProject)
 	api.PUT("/projects/:id", projectController.UpdateProject)
@@ -127,6 +126,7 @@ func main() {
 	api.PUT("/skills/:id", skillController.UpdateSkill)
 	api.DELETE("/skills/:id", skillController.DeleteSkill)
 
+	api.POST("/proposals", proposalController.CreateProposal)
 	api.GET("/proposals/:id", proposalController.GetProposal)
 	api.GET("/projects/:id/proposals", proposalController.GetProposalsByProject)
 	api.PUT("/proposals/:id", proposalController.UpdateProposal)
