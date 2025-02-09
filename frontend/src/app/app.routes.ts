@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 import { HomeComponent } from './components/home/home.component';
 import { ProjectsComponent } from './components/projects/projects.component';
@@ -17,7 +18,7 @@ import { TaskDetailsComponent } from './components/task-details/task-details.com
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'projects', component: ProjectsComponent },
   { path: 'projects/:id', component: ProjectDetailsComponent },
   { path: 'freelancers', component: FreelancersComponent },
