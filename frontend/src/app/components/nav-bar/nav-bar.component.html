@@ -1,0 +1,17 @@
+<mat-toolbar color="primary" class="navbar-toolbar">
+    <div class="navbar-left" *ngIf="isLoggedIn">
+      <a routerLink="/projects" class="navbar-link">Search Projects</a>
+    </div>
+    
+    <span class="spacer"></span>
+    
+    <div class="navbar-right" *ngIf="isLoggedIn">
+      <a routerLink="/profile" class="navbar-link">Profile</a>
+      <button mat-button color="accent" (click)="onLogout()">Logout</button>
+    </div>
+    
+    <div class="navbar-right" *ngIf="!isLoggedIn">
+      <a routerLink="/login" class="navbar-link">Login</a>
+      <a routerLink="/register" class="navbar-link">Register</a>
+    </div>
+  </mat-toolbar>  
