@@ -2,7 +2,6 @@ package models
 
 import "time"
 
-// Skill represents the skills table.
 type Skill struct {
 	ID          uint      `gorm:"column:skill_id;primaryKey" json:"skill_id"`
 	Name        string    `gorm:"type:varchar(255);not null" json:"name"`

@@ -9,7 +9,7 @@ import (
 // RoleMiddleware ensures the user has at least one of the allowed roles to access that route.
 func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userRole, exists := c.Get("userRole")
+		userRole, exists := c.Get("role")
 		if !exists {
 			c.JSON(http.StatusForbidden, gin.H{"error": "No user role found in token"})
 			c.Abort()
