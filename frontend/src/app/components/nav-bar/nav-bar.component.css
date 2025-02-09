@@ -23,3 +23,8 @@
   .navbar-link:hover {
     text-decoration: underline;
   }
+
+  .navbar-toolbar {
+    background-color: red !important;
+    border: 2px solid yellow;
+  }

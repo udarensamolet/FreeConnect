@@ -1,4 +1,3 @@
-// auth.guard.ts
 import { Injectable } from '@angular/core';
 import { 
   CanActivate,
@@ -11,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class ClientGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -21,15 +20,10 @@ export class AuthGuard implements CanActivate {
       this.router.navigate(['/login']);
       return false;
     }
-
-    const allowedRoles = route.data['roles'] as Array<string>;
-    if (allowedRoles && allowedRoles.length > 0) {
-      if (!allowedRoles.includes(user.role)) {
-        this.router.navigate(['/login']); 
-        return false;
-      }
+    if (user.role !== 'client') {
+      this.router.navigate(['/login']); // or an "access denied" page
+      return false;
     }
-
     return true;
   }
 }
