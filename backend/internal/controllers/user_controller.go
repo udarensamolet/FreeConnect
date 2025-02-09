@@ -25,7 +25,7 @@ func (uc *UserController) RegisterUser(c *gin.Context) {
 		Name            string `json:"name" binding:"required"`
 		Email           string `json:"email" binding:"required,email"`
 		Password        string `json:"password" binding:"required,min=6"`
-		ConfirmPassword string `json:"confirm_password" binding:"required,min=6"`
+		ConfirmPassword string `json:"confirmPassword" binding:"required,min=6"`
 		Role            string `json:"role" binding:"required"` // 'admin', 'client', or 'freelancer'
 	}
 	if err := c.ShouldBindJSON(&payload); err != nil {
