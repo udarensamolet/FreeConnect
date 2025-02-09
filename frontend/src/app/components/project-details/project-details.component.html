@@ -8,4 +8,21 @@
       <li *ngFor="let t of project.tasks">{{ t.title }} ({{ t.status }})</li>
     </ul>
   </div>
+
+<div *ngIf="user.role === 'freelancer'">
+  <h3>Submit a Proposal</h3>
+  <form (ngSubmit)="onSubmitProposal()">
+    <label>Proposal Text:</label>
+    <textarea [(ngModel)]="proposalText" name="proposalText" required></textarea>
+
+    <label>Estimated Duration (days):</label>
+    <input type="number" [(ngModel)]="estimatedDuration" name="estimatedDuration" required />
+
+    <label>Bid Amount:</label>
+    <input type="number" [(ngModel)]="bidAmount" name="bidAmount" required />
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
   

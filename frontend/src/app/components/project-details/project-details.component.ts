@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
+import { AuthService } from '../../services/auth.service';
+import { ProposalService } from '../../services/proposal.service';
 
 @Component({
   selector: 'app-project-details',
@@ -8,11 +10,16 @@ import { ProjectService } from '../../services/project.service';
   styleUrls: ['./project-details.component.css']
 })
 export class ProjectDetailsComponent implements OnInit {
-  project: any;
+  user: any;
+  proposalText = '';
+  estimatedDuration = 0;
+  bidAmount = 0;
 
   constructor(
     private route: ActivatedRoute,
-    private projectService: ProjectService
+    private projectService: ProjectService,
+    private proposalService: ProposalService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
