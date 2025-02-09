@@ -20,7 +20,7 @@ export class ProjectService {
   }
 
   createProject(projectData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/client/projects`, projectData);
+    return this.http.post(`${this.apiUrl}/projects`, projectData);
   }
 
   updateProject(projectId: number, projectData: any): Observable<any> {

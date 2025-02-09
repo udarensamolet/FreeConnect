@@ -7,9 +7,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProposalService {
-  private apiUrl = environment.apiBaseUrl;  
+  private apiUrl = environment.apiBaseUrl; // e.g. "http://localhost:8080/api"
 
   constructor(private http: HttpClient) {}
+
+  getAllProposals(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/proposals`);
+  }
 
   createProposal(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/proposals`, data);
@@ -19,19 +23,12 @@ export class ProposalService {
     return this.http.get(`${this.apiUrl}/proposals/${proposalId}`);
   }
 
-  getProposalsByProject(projectId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/projects/${projectId}/proposals`);
-  }
-
   updateProposal(proposalId: number, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/proposals/${proposalId}`, data);
   }
 
+
   deleteProposal(proposalId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/proposals/${proposalId}`);
-  }
-
-  acceptProposal(proposalId: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/proposals/${proposalId}/accept`, {});
   }
 }

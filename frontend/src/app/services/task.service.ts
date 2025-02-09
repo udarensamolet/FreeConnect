@@ -7,27 +7,27 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = environment.apiBaseUrl; 
+  private apiUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
-  createTask(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/tasks`, data);
-  }
-
-  getTaskById(taskId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/tasks/${taskId}`);
+  createTask(projectId: number, data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/projects/${projectId}/tasks`, data);
   }
 
   getTasksByProject(projectId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/projects/${projectId}/tasks`);
   }
 
-  updateTask(taskId: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/tasks/${taskId}`, data);
+  getTaskById(projectId: number, taskId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/projects/${projectId}/tasks/${taskId}`);
   }
 
-  deleteTask(taskId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/tasks/${taskId}`);
+  updateTask(projectId: number, taskId: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/projects/${projectId}/tasks/${taskId}`, data);
+  }
+
+  deleteTask(projectId: number, taskId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/projects/${projectId}/tasks/${taskId}`);
   }
 }

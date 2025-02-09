@@ -12,10 +12,10 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   listAllUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/users`);
+    return this.http.get(`${this.apiUrl}/users`);
   }
 
   approveUser(userId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/users/${userId}/approve`, {});
+    return this.http.put(`${this.apiUrl}/users/${userId}/approve`, {});
   }
 }

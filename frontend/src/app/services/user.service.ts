@@ -15,19 +15,12 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/users/${userId}`);
   }
 
+ 
   updateUser(userId: number, userData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/users/${userId}`, userData);
   }
 
-  updateUserSkills(userId: number, skillIDs: number[]): Observable<any> {
-    return this.http.put(`${this.apiUrl}/users/${userId}/skills`, { skill_ids: skillIDs });
-  }
-
-  listAllUsers(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/admin/users`);
-  }
-
-  approveUser(userId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/admin/users/${userId}/approve`, {});
+  deleteUser(userId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/users/${userId}`);
   }
 }

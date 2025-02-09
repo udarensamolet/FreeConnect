@@ -7,32 +7,17 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = environment.apiBaseUrl;
+  private apiUrl = environment.apiBaseUrl; 
 
   constructor(private http: HttpClient, private zone: NgZone) {}
 
-  createNotification(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/notifications`, data);
+  getNotifications(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/notifications?userId=${userId}`);
   }
 
-  getNotificationById(notifId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/notifications/${notifId}`);
-  }
-
-  getNotificationsByUser(userId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/notifications/user/${userId}`);
-  }
-
-  updateNotification(notifId: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/notifications/${notifId}`, data);
-  }
-
-  deleteNotification(notifId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/notifications/${notifId}`);
-  }
-
+  // SSE at GET /api/updates
   getSSEUpdates(): Observable<string> {
-    const url = `${this.apiUrl.replace('/api', '')}/updates`;
+    const url = `${this.apiUrl}/updates`; 
 
     return new Observable(observer => {
       const eventSource = new EventSource(url);
@@ -53,9 +38,5 @@ export class NotificationService {
         eventSource.close();
       };
     });
-  }
-
-  broadcastMessage(message: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/broadcast`, { message });
   }
 }

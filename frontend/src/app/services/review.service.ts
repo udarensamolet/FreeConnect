@@ -11,16 +11,16 @@ export class ReviewService {
 
   constructor(private http: HttpClient) {}
 
+  getAllReviews(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/reviews`);
+  }
+
   createReview(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/reviews`, data);
   }
 
   getReviewById(reviewId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/reviews/${reviewId}`);
-  }
-
-  getReviewsByProject(projectId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/projects/${projectId}/reviews`);
   }
 
   updateReview(reviewId: number, data: any): Observable<any> {
