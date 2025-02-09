@@ -1,0 +1,25 @@
+:host {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  
+  mat-card {
+    width: 400px;
+  }
+  
+  mat-form-field {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  mat-card-header{
+    display: flex;
+    justify-content: center;
+    color: #687168;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 25px;
+  }
+  

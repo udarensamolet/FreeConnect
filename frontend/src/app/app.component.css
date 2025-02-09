@@ -1,0 +1,19 @@
+/* Add padding at the bottom so main content won't be hidden underneath the fixed footer */
+.main-content {
+    padding-bottom: 60px; /* match or exceed the footer height */
+  }
+  
+  .app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    
+    /* Optional styling */
+    background-color: #E0E2EC;
+    border-top: 1px solid #ccc;
+    padding: 1rem;
+    text-align: center;
+  }
+  
