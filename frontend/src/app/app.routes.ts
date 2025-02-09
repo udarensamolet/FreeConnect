@@ -18,8 +18,8 @@ import { TaskDetailsComponent } from './components/task-details/task-details.com
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'projects', component: ProjectsComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuard] },
   { path: 'projects/:id', component: ProjectDetailsComponent },
   { path: 'freelancers', component: FreelancersComponent },
   { path: 'freelancers/:id', component: FreelancerProfileComponent },
