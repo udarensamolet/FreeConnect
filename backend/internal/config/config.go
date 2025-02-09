@@ -15,15 +15,24 @@ type Config struct {
 func LoadConfig() (*Config, error) {
 	// Load .env file if it exists.
 	_ = godotenv.Load()
+
+	dsn := os.Getenv("DB_DSN")
+	if dsn == "" {
+		// Option A: Provide a fallback (localhost):
+		// dsn = "host=localhost user=postgres password=root dbname=freeconnect sslmode=disable"
+
+		// Option B: Or simply fail if it's not set:
+		return nil, errors.New("DB_DSN is not set (and no fallback provided)")
+	}
+
+	// Read PORT from environment or default to 8080
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 	cfg := &Config{
-		DB_DSN: "host=localhost user=postgres password=root dbname=freeconnect sslmode=disable",
-		Port:   os.Getenv("PORT"),
-	}
-	if cfg.DB_DSN == "" {
-		return nil, errors.New("DB_DSN is not set")
-	}
-	if cfg.Port == "" {
-		cfg.Port = "8080"
+		DB_DSN: dsn,
+		Port:   port,
 	}
 	return cfg, nil
 }
