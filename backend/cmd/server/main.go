@@ -123,7 +123,7 @@ func main() {
 	{
 		// ---------------- ADMIN EXAMPLES ----------------
 		// (If you want a stricter admin-only approach, use RoleMiddleware("admin"))
-		secure.GET("/users", adminController.ListAllUsers) // Admin listing all users
+		secure.GET("/users", adminController.ListAllUsers)
 		secure.PUT("/users/:id/approve", adminController.ApproveUser)
 
 		secure.GET("/users/:id", userController.GetUser)
@@ -131,10 +131,14 @@ func main() {
 		secure.PUT("/users/:id/skills", userController.UpdateUserSkills)
 
 		// ---------------- PROJECTS ----------------
-		// Clients only for POST, but we rely on the controllers to check role
+		// NOTE: Now creation does NOT require a freelancer_id.
 		secure.POST("/projects", projectController.CreateProject)
 		secure.PUT("/projects/:id", projectController.UpdateProject)
 		secure.DELETE("/projects/:id", projectController.DeleteProject)
+
+		// ADDITIONAL: route for setting the freelancer
+		// e.g. POST /api/projects/:id/set-freelancer
+		secure.POST("/projects/:id/set-freelancer", projectController.SetProjectFreelancer)
 
 		// ---------------- PROPOSALS ----------------
 		secure.POST("/proposals", proposalController.CreateProposal)
