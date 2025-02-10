@@ -14,8 +14,10 @@ services:
     networks:
       - app-network
 
-  app:
-    build: .
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -23,6 +25,15 @@ services:
     environment:
       DB_DSN: "host=db user=postgres password=root dbname=freeconnect sslmode=disable"
       PORT: "8080"
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
     networks:
       - app-network
 
