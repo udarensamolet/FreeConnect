@@ -1,11 +1,17 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-footer',
-  templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css'],
   standalone: true,
-  imports: [MatToolbarModule]
+  imports: [
+    CommonModule,
+    MatToolbarModule
+  ],
+  templateUrl: './footer.component.html',
+  styleUrls: ['./footer.component.css']
 })
-export class FooterComponent { }
+export class FooterComponent {
+  currentYear = new Date().getFullYear();
+}
