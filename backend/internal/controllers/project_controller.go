@@ -120,7 +120,7 @@ func (pc *ProjectController) GetAllProjects(c *gin.Context) {
 // It allows updating project fields; only the project owner or admin can update.
 func (pc *ProjectController) UpdateProject(c *gin.Context) {
 	// Get the project ID from the URL.
-	idStr := c.Param("id")
+	idStr := c.Param("projectId")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
