@@ -1,0 +1,47 @@
+<mat-card *ngIf="user" class="profile-card">
+  <mat-card-title>
+    {{ user.name }}
+    <button mat-icon-button color="primary" (click)="onEditProfile()" style="float: right;">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </mat-card-title>
+  <mat-card-subtitle>
+    Role: {{ user.role }}
+  </mat-card-subtitle>
+  <mat-card-content>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p *ngIf="user.bio"><strong>Bio:</strong> {{ user.bio }}</p>
+    <p *ngIf="user.company_name && user.role !== 'freelancer'">
+      <strong>Company:</strong> {{ user.company_name }}
+    </p>
+    <p *ngIf="user.role !== 'client'">
+      <strong>Availability:</strong> {{ user.availability ? 'Yes' : 'No' }}
+    </p>
+    <p *ngIf="user.hourly_rate"><strong>Hourly Rate:</strong> {{ user.hourly_rate | currency }}</p>
+    <p *ngIf="user.rating"><strong>Rating:</strong> {{ user.rating }}</p>
+
+    <!-- If user is FREELANCER, show skills + "Add Skill" button -->
+    <div *ngIf="user.role === 'freelancer'" class="skills-section">
+      <h3>
+        Skills
+        <button mat-raised-button color="primary" (click)="onAddSkill()">
+          + Skill
+        </button>
+      </h3>
+
+      <!-- If user has no skills, show a message -->
+      <p *ngIf="!user.skills || user.skills.length === 0">
+        You have no skills listed.
+      </p>
+
+      <!-- Otherwise, display a list of skills -->
+      <mat-list *ngIf="user.skills && user.skills.length > 0">
+        <mat-list-item *ngFor="let skill of user.skills">
+          {{ skill.name }} ({{ skill.level || 'N/A' }})
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<p *ngIf="!user">Loading user profile...</p>

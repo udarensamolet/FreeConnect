@@ -1,0 +1,13 @@
+<h2>Add Skill</h2>
+<div>
+  <mat-form-field appearance="fill">
+    <mat-label>Skill Name</mat-label>
+    <input matInput [(ngModel)]="skillName" />
+  </mat-form-field>
+</div>
+<div class="dialog-actions">
+  <button mat-raised-button color="primary" (click)="onAddSkill()">
+    Add
+  </button>
+  <button mat-button (click)="onCancel()">Cancel</button>
+</div>

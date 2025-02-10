@@ -1,1 +1,19 @@
-<p>task-details works!</p>
+<mat-card *ngIf="task">
+    <mat-card-title>{{ task.title }}</mat-card-title>
+    <mat-card-subtitle>
+      Status: {{ task.status }} 
+      | Budget: {{ task.budget | currency }}
+    </mat-card-subtitle>
+    <mat-card-content>
+      <p>{{ task.description }}</p>
+      <p>Deadline: {{ task.deadline | date:'mediumDate' }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="onBackToProject()">
+        Back to Project
+      </button>
+    </mat-card-actions>
+  </mat-card>
+  
+  <p *ngIf="!task">Task not found or failed to load.</p>
+  

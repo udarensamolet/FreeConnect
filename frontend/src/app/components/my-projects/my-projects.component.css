@@ -1,23 +1,61 @@
 .full-width-table {
-    width: 100%;
-  }
-  
-  mat-card {
-    margin: 2rem auto;
-    max-width: 900px;
-  }
-  
-  mat-card-title {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
-  
-  th.mat-header-cell,
-  td.mat-cell {
-    padding: 0.75rem;
-  }
-  
-  button[mat-icon-button] {
-    margin-right: 0.5rem;
-  }
-  
+  width: 100%;
+  border-collapse: collapse; /* Ensures clean table appearance */
+}
+
+mat-card {
+  margin: 2rem auto;
+  max-width: 1100px; /* Increased width for a larger card */
+  background-color: #28666e; /* Teal green for the background */
+  color: #ffffff; /* White text for contrast */
+  padding: 2rem;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+mat-card:hover {
+  transform: scale(1.03); /* Slight zoom on hover */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+mat-card-title {
+  font-size: 1.5rem; /* Slightly larger title font */
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #fedc97; /* Light yellow for the title */
+}
+
+th.mat-header-cell {
+  padding: 0.75rem;
+  background-color: #7c9885; /* Sage green for the table header */
+  color: #ffffff; /* White text for header cells */
+  font-weight: bold;
+  border-bottom: 2px solid #b5b682; /* Light green border for separation */
+  text-align: left;
+}
+
+td.mat-cell {
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle background for cells */
+  color: #ffffff; /* White text for table data */
+  border-bottom: 1px solid #b5b682; /* Light green border */
+}
+
+td.mat-cell:hover {
+  background-color: #7c9885; /* Highlight cell on hover */
+  color: #ffffff; /* Keep text white */
+}
+
+button[mat-icon-button] {
+  margin-right: 0.5rem;
+  background-color: #7c9885; /* Sage green for buttons */
+  color: #ffffff;
+  border-radius: 50%; /* Rounded button */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[mat-icon-button]:hover {
+  background-color: #b5b682; /* Light green on hover */
+  transform: scale(1.1); /* Slight zoom on hover */
+}

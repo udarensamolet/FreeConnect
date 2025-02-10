@@ -41,12 +41,10 @@ export class CreateTaskComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Retrieve :id from the URL
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
   }
 
   onSubmit(): void {
-    // Convert a YYYY-MM-DD string into an ISO string
     const isoDeadline = new Date(this.formData.deadline).toISOString();
 
     const payload = {
@@ -59,7 +57,6 @@ export class CreateTaskComponent implements OnInit {
 
     this.taskService.createTask(payload).subscribe({
       next: () => {
-        // Navigate back to the project details after creating the task
         this.router.navigate(['/projects', this.projectId]);
       },
       error: (err) => {
