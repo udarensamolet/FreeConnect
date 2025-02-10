@@ -1,0 +1,54 @@
+<mat-card>
+    <mat-card-title>Edit Project</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()">
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            [(ngModel)]="formData.title"
+            name="title"
+            required
+          />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="formData.description"
+            name="description"
+            required
+          ></textarea>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Budget</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="formData.budget"
+            name="budget"
+            required
+          />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Duration (days)</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="formData.duration"
+            name="duration"
+            required
+          />
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit">
+          Update Project
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  

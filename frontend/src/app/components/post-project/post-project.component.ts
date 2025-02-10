@@ -1,34 +1,67 @@
-// post-project.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { ProjectService } from '../../services/project.service';
-import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-post-project',
-  templateUrl: './post-project.component.html'
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ],
+  templateUrl: './post-project.component.html',
+  styleUrls: ['./post-project.component.css']
 })
-export class PostProjectComponent {
-  title = '';
-  description = '';
-  budget = 0;
-  duration = 0;
+export class PostProjectComponent implements OnInit {
+  formData = {
+    title: '',
+    description: '',
+    budget: 0,
+    duration: 0
+  };
 
-  constructor(private projectService: ProjectService, private alertService: AlertService) {}
+  user: any;  // We'll store the current user (client) here
 
-  onSubmit() {
-    const projectData = {
-      title: this.title,
-      description: this.description,
-      budget: this.budget,
-      duration: this.duration
+  constructor(
+    private authService: AuthService,
+    private projectService: ProjectService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    // Get current user from AuthService
+    this.user = this.authService.getCurrentUser();
+    // If user is not client, they shouldn't be here, but we rely on the guard anyway
+  }
+
+  onSubmit(): void {
+    // Build the payload
+    const payload = {
+      ...this.formData,
+      client_id: this.user.user_id
+      // status defaults to "open" in your backend
+      // creation_date is handled by your backend's default
     };
-    this.projectService.createProject(projectData).subscribe({
-      next: (res) => {
-        alert('Project created successfully!');
+
+    this.projectService.createProject(payload).subscribe({
+      next: (response) => {
+        // After success, maybe navigate to "my-projects"
+        this.router.navigate(['/my-projects']);
       },
       error: (err) => {
-        console.error(err);
-        alert('Failed to create project');
+        console.error('Failed to create project:', err);
       }
     });
   }

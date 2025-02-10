@@ -11,23 +11,19 @@ export class TaskService {
 
   constructor(private http: HttpClient) {}
 
-  createTask(projectId: number, data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/projects/${projectId}/tasks`, data);
+  createTask(taskData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/tasks`, taskData);
   }
-
+  
   getTasksByProject(projectId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/projects/${projectId}/tasks`);
   }
 
-  getTaskById(projectId: number, taskId: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/projects/${projectId}/tasks/${taskId}`);
+  updateTask(taskId: number, taskData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/tasks/${taskId}`, taskData);
   }
 
-  updateTask(projectId: number, taskId: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/projects/${projectId}/tasks/${taskId}`, data);
-  }
-
-  deleteTask(projectId: number, taskId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/projects/${projectId}/tasks/${taskId}`);
+  deleteTask(taskId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/tasks/${taskId}`);
   }
 }
