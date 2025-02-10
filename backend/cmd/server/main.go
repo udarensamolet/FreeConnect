@@ -133,7 +133,7 @@ func main() {
 		// ---------------- PROJECTS ----------------
 		// NOTE: Now creation does NOT require a freelancer_id.
 		secure.POST("/projects", projectController.CreateProject)
-		secure.PUT("/projects/:id", projectController.UpdateProject)
+		secure.PUT("/projects/:projectId", projectController.UpdateProject)
 		secure.DELETE("/projects/:id", projectController.DeleteProject)
 
 		// ADDITIONAL: route for setting the freelancer

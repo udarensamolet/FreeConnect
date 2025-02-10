@@ -96,7 +96,7 @@ func (pc *ProjectController) GetAllProjects(c *gin.Context) {
 
 // UpdateProject handles PUT /api/projects/:id.
 func (pc *ProjectController) UpdateProject(c *gin.Context) {
-	idStr := c.Param("id")
+	idStr := c.Param("projectId")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
