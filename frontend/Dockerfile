@@ -1,37 +1,23 @@
-# Stage 1: Build the Angular application
-FROM node:20 as build
+# Use a newer Node image (Node 16 or Node 18 recommended)
+FROM node:20
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to leverage Docker cache
+# Copy the package files to leverage Docker cache for dependency installation
 COPY package*.json ./
 
-# Install Angular CLI globally (optional if you want to use the global CLI)
+# (Optional) Install Angular CLI globally if needed
 RUN npm install -g @angular/cli
 
-# Install project dependencies (including devDependencies)
+# Install the dependencies
 RUN npm install
 
-# Copy the rest of the application source code
+# Copy the rest of the application code
 COPY . .
 
-# Build the Angular application for production.
-# The double-dash (-- --prod) passes the --prod flag to the underlying ng build command.
-RUN npm run build -- --prod
+# Expose the port on which Angular’s development server runs
+EXPOSE 4200
 
-# Stage 2: Serve the application with Nginx
-FROM nginx:alpine
-
-# Remove default Nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy the production build from the previous stage to Nginx's public directory.
-# Update the path if your Angular output directory is different.
-COPY --from=build /app/dist/freeconnect-frontend /usr/share/nginx/html
-
-# Expose port 80 for Nginx
-EXPOSE 80
-
-# Start Nginx in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Angular development server, ensuring it listens on all network interfaces.
+CMD ["ng", "serve", "--host", "0.0.0.0"]

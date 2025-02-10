@@ -31,11 +31,12 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile  
     ports:
-      - "4200:80"
-    networks:
-      - app-network
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  
 
 volumes:
   postgres_data:
