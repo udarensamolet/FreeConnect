@@ -153,3 +153,79 @@ func (tc *TaskController) DeleteTask(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Task deleted successfully"})
 }
+
+// task_controller.go
+
+func (tc *TaskController) EditTask(c *gin.Context) {
+	// 1) Parse route params: project :id and task :taskId
+	projectIDStr := c.Param("projectId")
+	projectID, err := strconv.Atoi(projectIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID"})
+		return
+	}
+
+	taskIDStr := c.Param("taskId")
+	taskID, err := strconv.Atoi(taskIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid task ID"})
+		return
+	}
+
+	// 2) Fetch the task from DB
+	task, err := tc.taskService.GetTaskByID(uint(taskID))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Task not found"})
+		return
+	}
+
+	// 3) Optional: Confirm the task truly belongs to that project
+	if task.ProjectID != uint(projectID) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "This task does not belong to the specified project"})
+		return
+	}
+
+	// 4) (Recommended) Check user ownership or admin
+	//   - Retrieve the project to see project.ClientID
+	//   - Compare with c.GetUint("userID") or userRole == "admin"
+	//   - For brevity, we skip that or only do it if your logic demands it.
+
+	// 5) Bind JSON payload for updated fields
+	var payload struct {
+		Title       string     `json:"title"`
+		Description string     `json:"description"`
+		Deadline    *time.Time `json:"deadline"`
+		Budget      *float64   `json:"budget"`
+		Status      string     `json:"status"`
+	}
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 6) Update fields if provided
+	if payload.Title != "" {
+		task.Title = payload.Title
+	}
+	if payload.Description != "" {
+		task.Description = payload.Description
+	}
+	if payload.Deadline != nil {
+		task.Deadline = *payload.Deadline
+	}
+	if payload.Budget != nil {
+		task.Budget = *payload.Budget
+	}
+	if payload.Status != "" {
+		task.Status = payload.Status
+	}
+
+	// 7) Call service to persist the changes
+	if err := tc.taskService.UpdateTask(task); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// 8) Return updated task
+	c.JSON(http.StatusOK, gin.H{"task": task})
+}

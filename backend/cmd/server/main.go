@@ -168,7 +168,7 @@ func main() {
 		secure.GET("/projects/:id/tasks", taskController.GetTasksByProject)
 		secure.PUT("/tasks/:id", taskController.UpdateTask)
 		secure.DELETE("/tasks/:id", taskController.DeleteTask)
-
+		secure.PUT("/projects/:projectId/tasks/:taskId/edit", taskController.EditTask)
 		// ---------------- NOTIFICATIONS ----------------
 		secure.POST("/notifications", notificationController.CreateNotification)
 		secure.GET("/notifications/:id", notificationController.GetNotification)
