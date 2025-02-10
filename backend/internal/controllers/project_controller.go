@@ -124,8 +124,8 @@ func (pc *ProjectController) UpdateProject(c *gin.Context) {
 		return
 	}
 
-	userID := c.GetUint("id")       // from JWT middleware
-	userRole := c.GetString("role") // also from JWT
+	userID := c.GetUint("userID")       // from JWT middleware
+	userRole := c.GetString("userRole") // also from JWT
 	if project.ClientID != userID && userRole != "admin" {
 		c.JSON(http.StatusForbidden, gin.H{"error": "You are not the owner of this project"})
 		return
