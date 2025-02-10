@@ -1,0 +1,23 @@
+.full-width-table {
+    width: 100%;
+  }
+  
+  mat-card {
+    margin: 2rem auto;
+    max-width: 900px;
+  }
+  
+  mat-card-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  th.mat-header-cell,
+  td.mat-cell {
+    padding: 0.75rem;
+  }
+  
+  button[mat-icon-button] {
+    margin-right: 0.5rem;
+  }
+  

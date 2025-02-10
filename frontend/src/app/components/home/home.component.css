@@ -1,65 +1,38 @@
-/* Hero Section Styles */
-.hero-container {
-    position: relative;
-    background: url('/assets/hero-background.jpg') no-repeat center center/cover;
-    /* If you don't have an image, use a background color: */
-    /* background-color: #3f51b5; */
-    height: 70vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .hero-overlay {
-    background: rgba(0, 0, 0, 0.5); /* semi-transparent dark overlay */
-    padding: 2rem;
-    border-radius: 8px;
-  }
-  
-  .hero-card {
-    background: transparent;
-    color: white;
-    box-shadow: none;
-  }
-  
-  .hero-card mat-card-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-  
-  .hero-card mat-card-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .hero-card mat-card-content p {
-    font-size: 1.1rem;
-  }
-  
-  .hero-card mat-card-actions {
-    margin-top: 1rem;
-  }
-  
-  /* Features Section Styles */
-  .features {
-    padding: 2rem;
-    text-align: center;
-    background-color: #f7f7f7;
-  }
-  
-  .features h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  .feature-card {
-    padding: 1rem;
-  }  
+.home-anonymous {
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.home-anonymous .buttons {
+  margin-top: 1rem;
+}
+
+.home-anonymous .buttons a {
+  display: inline-block;
+  margin: 0.5rem;
+  text-decoration: none;
+  background: #1565c0;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.home-logged-in {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.no-projects-msg {
+  font-style: italic;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.project-card {
+  margin: 1rem 0;
+}
+
+mat-card {
+  margin-bottom: 1rem;
+}

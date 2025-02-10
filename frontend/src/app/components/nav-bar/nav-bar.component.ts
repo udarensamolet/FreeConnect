@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { Subscription } from 'rxjs';
@@ -9,28 +9,42 @@ import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-navbar',
-  templateUrl: './nav-bar.component.html',
-  styleUrls: ['./nav-bar.component.css'],
   standalone: true,
-  imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule]
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatToolbarModule,
+    MatButtonModule
+  ],
+  templateUrl: './nav-bar.component.html',
+  styleUrls: ['./nav-bar.component.css']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  isLoggedIn: boolean = false;
-  private authSubscription!: Subscription;
+  isLoggedIn = false;
+  userRole: string | null = null;
 
-  constructor(private authService: AuthService, private router: Router, private alertService: AlertService) {}
+  private userSubscription!: Subscription;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private alertService: AlertService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    // Subscribe to the loggedIn$ observable to reactively update the state.
-    this.authSubscription = this.authService.loggedIn$.subscribe(
-      (loggedIn) => (this.isLoggedIn = loggedIn)
-    );
+    // Subscribe to the user$ observable, not just a boolean.
+    this.userSubscription = this.authService.user$.subscribe((user) => {
+      this.isLoggedIn = !!user;
+      this.userRole = user ? user.role : null;
+      // Force a re-check of the template
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
-    // Clean up the subscription.
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
   }
 

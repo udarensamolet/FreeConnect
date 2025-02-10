@@ -1,17 +1,41 @@
 <mat-toolbar color="primary" class="navbar-toolbar">
+
+  <!-- If user is logged in, show different links by role -->
   <div class="navbar-left" *ngIf="isLoggedIn">
-    <a routerLink="/projects" class="navbar-link">Search Projects</a>
+
+    <!-- CLIENT role -->
+    <ng-container *ngIf="userRole === 'client'">
+      <a routerLink="/my-projects" class="navbar-link">My Projects</a>
+      <a routerLink="/post-project" class="navbar-link">Create a Project</a>
+      <a routerLink="/client-dashboard" class="navbar-link">Dashboard</a>
+    </ng-container>
+
+    <!-- FREELANCER role -->
+    <ng-container *ngIf="userRole === 'freelancer'">
+      <a routerLink="/freelancer-projects" class="navbar-link">My Projects</a>
+      <a routerLink="/projects" class="navbar-link">Browse Projects</a>
+      <a routerLink="/freelancer-dashboard" class="navbar-link">Dashboard</a>
+    </ng-container>
+
+    <!-- ADMIN role -->
+    <ng-container *ngIf="userRole === 'admin'">
+      <a routerLink="/admin-dashboard" class="navbar-link">Dashboard</a>
+    </ng-container>
+
   </div>
-  
+
   <span class="spacer"></span>
-  
+
+  <!-- Right side: Profile + Logout if logged in -->
   <div class="navbar-right" *ngIf="isLoggedIn">
     <a routerLink="/profile" class="navbar-link">Profile</a>
-    <button mat-button color="accent" (click)="onLogout()">Logout</button>
+    <button class="navbar-button" mat-button color="accent" (click)="onLogout()">Logout</button>
   </div>
-  
+
+  <!-- Right side: Login + Register if NOT logged in -->
   <div class="navbar-right" *ngIf="!isLoggedIn">
     <a routerLink="/login" class="navbar-link">Login</a>
     <a routerLink="/register" class="navbar-link">Register</a>
   </div>
+
 </mat-toolbar>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,35 +9,21 @@ import { environment } from '../../environments/environment';
 export class ProjectService {
   private apiUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  getAllProjects(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/projects`);
+  }
 
   createProject(projectData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/projects`, projectData);
   }
 
-  getAllProjects(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/projects`);
+  updateProject(projectId: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/projects/${projectId}`, data);
   }
-
-  getProjects(search?: string, minBudget?: number, maxBudget?: number, status?: string): Observable<any> {
-    let params = new HttpParams();
-    if (search) {
-      params = params.set('search', search);
-    }
-    if (minBudget !== undefined) {
-      params = params.set('minBudget', minBudget.toString());
-    }
-    if (maxBudget !== undefined) {
-      params = params.set('maxBudget', maxBudget.toString());
-    }
-    if (status) {
-      params = params.set('status', status);
-    }
   
-    return this.http.get(`${this.apiUrl}/projects`, { params });
-  }
-
   getProjectById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/projects/${id}`);
-  }
+  }  
 }
