@@ -1,0 +1,56 @@
+<mat-card>
+    <mat-card-title>Browse Unassigned Projects</mat-card-title>
+    <mat-card-content>
+    
+      <!-- If no projects, show a message -->
+      <p *ngIf="dataSource.length === 0">
+        No unassigned projects found.
+      </p>
+  
+      <!-- Otherwise, show a table of unassigned projects -->
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 full-width-table">
+  
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef> Title </th>
+          <td mat-cell *matCellDef="let p"> {{ p.title }} </td>
+        </ng-container>
+  
+        <!-- Budget Column -->
+        <ng-container matColumnDef="budget">
+          <th mat-header-cell *matHeaderCellDef> Budget </th>
+          <td mat-cell *matCellDef="let p"> {{ p.budget | currency }} </td>
+        </ng-container>
+  
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let p"> {{ p.status }} </td>
+        </ng-container>
+  
+        <!-- CreationDate Column -->
+        <ng-container matColumnDef="creationDate">
+          <th mat-header-cell *matHeaderCellDef> Created On </th>
+          <td mat-cell *matCellDef="let p"> 
+            {{ p.creation_date | date:'medium' }}
+          </td>
+        </ng-container>
+  
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let p">
+            <button mat-icon-button color="accent" (click)="onDetails(p.project_id)">
+              <mat-icon>info</mat-icon>
+            </button>
+            <!-- Potentially add more actions, like "Submit Proposal" -->
+          </td>
+        </ng-container>
+  
+        <!-- Header/Row Declarations -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row        *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  

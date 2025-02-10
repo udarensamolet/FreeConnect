@@ -1,10 +1,54 @@
 mat-card {
-  max-width: 600px;
+  max-width: 800px; /* Increased width for better spacing */
   margin: 2rem auto;
-  padding: 1rem;
+  padding: 2rem; /* Increased padding for better spacing */
+  background-color: #28666e; /* Teal green for the card background */
+  color: #ffffff; /* White text for contrast */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+mat-card-title {
+  font-size: 1.6rem; /* Slightly larger font for title */
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #fedc97; /* Light yellow for title text */
+  text-align: center;
+}
+
+mat-card-content {
+  font-size: 1.2rem; /* Slightly larger font for content */
+  line-height: 1.6;
 }
 
 mat-form-field {
   display: block;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem; /* Increased margin for better spacing between fields */
+  background-color: #7c9885; /* Sage green background for input fields */
+  border-radius: 8px; /* Rounded edges for form fields */
+  padding: 0.5rem; /* Additional padding for appearance */
+}
+
+mat-label {
+  color: #ffffff; /* White text for labels */
+}
+
+input, textarea {
+  color: #ffffff; /* White text for input and textarea */
+  background-color: transparent; /* Transparent background to match card */
+  border: none; /* No borders for cleaner appearance */
+}
+
+button[mat-raised-button] {
+  background-color: #7c9885; /* Sage green for buttons */
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px; /* Rounded corners */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[mat-raised-button]:hover {
+  background-color: #b5b682; 
+  transform: scale(1.05); 
 }

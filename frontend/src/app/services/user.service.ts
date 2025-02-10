@@ -23,4 +23,8 @@ export class UserService {
   deleteUser(userId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/users/${userId}`);
   }
+
+  addSkillToUser(userId: number, skillName: string) {
+    return this.http.put(`${this.apiUrl}/users/${userId}/skills?skillName=${skillName}`, {});
+  }
 }

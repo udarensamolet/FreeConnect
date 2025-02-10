@@ -19,11 +19,15 @@ export class TaskService {
     return this.http.get(`${this.apiUrl}/projects/${projectId}/tasks`);
   }
 
-  updateTask(taskId: number, taskData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/tasks/${taskId}`, taskData);
-  }
-
   deleteTask(taskId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/tasks/${taskId}`);
+  }
+
+  getTaskById(taskId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/tasks/${taskId}`);
+  }
+  
+  updateTask(taskId: number, taskData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/tasks/${taskId}`, taskData);
   }
 }

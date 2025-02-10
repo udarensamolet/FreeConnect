@@ -8,13 +8,14 @@ mat-card {
   margin: 2rem auto;
 }
 
-mat-card-header {
-  font-size: 1.6rem; /* Larger header font */
+mat-card-title {
+  font-size: 1.6rem;
   font-weight: bold;
-  color: #fedc97; /* Light yellow for header text */
+  margin-bottom: 1.5rem;
+  color: #fedc97; /* Light yellow for title */
   text-align: center;
   padding-bottom: 10px;
-  border-bottom: 2px solid #7c9885; /* Accent separator using a sage green */
+  border-bottom: 2px solid #7c9885; /* Accent separator */
 }
 
 mat-card-content {
@@ -32,13 +33,22 @@ mat-label {
   color: grey; /* Label text color */
 }
 
-input, textarea {
-  color: #ffffff; /* White text for inputs and text areas */
-  background-color: transparent; /* Transparent input background */
+input, textarea, mat-select {
+  color: #ffffff; /* White text for inputs, text areas, and select dropdown */
+  background-color: transparent; /* Transparent background */
   border: none; /* Remove borders */
   padding: 10px;
   border-radius: 8px; /* Soft edges */
   width: 100%;
+}
+
+mat-option {
+  color: black; /* Black text for dropdown options */
+}
+
+mat-option:hover, mat-option.mat-active {
+  background-color: #7c9885; /* Sage green hover effect */
+  color: black !important; /* Black text for hovered or active option */
 }
 
 button[mat-raised-button] {
@@ -61,7 +71,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
-  background-color: #033f63; /* Navbar/footer background for contrast */
+  height: 100vh;
+  background-color: #033f63; /* Navbar/footer background */
   margin: 0;
 }

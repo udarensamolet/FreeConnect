@@ -11,11 +11,13 @@
     </ng-container>
 
     <!-- FREELANCER role -->
+   <!-- nav-bar.component.html, for example in the FREELANCER role -->
     <ng-container *ngIf="userRole === 'freelancer'">
       <a routerLink="/freelancer-projects" class="navbar-link">My Projects</a>
-      <a routerLink="/projects" class="navbar-link">Browse Projects</a>
+      <a routerLink="/browse-projects" class="navbar-link">Browse Projects</a>
       <a routerLink="/freelancer-dashboard" class="navbar-link">Dashboard</a>
     </ng-container>
+
 
     <!-- ADMIN role -->
     <ng-container *ngIf="userRole === 'admin'">
@@ -26,13 +28,11 @@
 
   <span class="spacer"></span>
 
-  <!-- Right side: Profile + Logout if logged in -->
   <div class="navbar-right" *ngIf="isLoggedIn">
     <a routerLink="/profile" class="navbar-link">Profile</a>
     <button class="navbar-button" mat-button color="accent" (click)="onLogout()">Logout</button>
   </div>
 
-  <!-- Right side: Login + Register if NOT logged in -->
   <div class="navbar-right" *ngIf="!isLoggedIn">
     <a routerLink="/login" class="navbar-link">Login</a>
     <a routerLink="/register" class="navbar-link">Register</a>

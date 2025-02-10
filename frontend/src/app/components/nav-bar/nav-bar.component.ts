@@ -33,11 +33,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to the user$ observable, not just a boolean.
     this.userSubscription = this.authService.user$.subscribe((user) => {
       this.isLoggedIn = !!user;
       this.userRole = user ? user.role : null;
-      // Force a re-check of the template
       this.cdr.detectChanges();
     });
   }

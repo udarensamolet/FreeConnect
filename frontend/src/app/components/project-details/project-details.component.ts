@@ -66,26 +66,25 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   onAddTask(): void {
-    // navigate to /projects/:id/create-task
     this.router.navigate(['/projects/', this.projectId, 'create-task']);
   }
 
-  // Action placeholders
   onEditTask(taskId: number): void {
-    // e.g. /projects/:projId/tasks/:taskId/edit
-    console.log('Edit Task:', taskId);
-    // this.router.navigate([`/projects/${this.projectId}/tasks/${taskId}/edit`]);
+    this.router.navigate([
+      '/projects',
+      this.projectId,
+      'tasks',
+      taskId,
+      'edit'
+    ]);
   }
 
   onTaskDetails(taskId: number): void {
-    // e.g. /projects/:projId/tasks/:taskId
-    console.log('Task details for:', taskId);
-    // this.router.navigate([`/projects/${this.projectId}/tasks/${taskId}`]);
+    this.router.navigate(['/projects', this.projectId, 'tasks', taskId]);
   }
-
+  
   onDeleteTask(taskId: number): void {
-    // call a method in your TaskService => DELETE /api/tasks/:id
     console.log('Delete Task:', taskId);
-    // then refresh this.loadTasks()
+    //this.loadTasks();
   }
 }

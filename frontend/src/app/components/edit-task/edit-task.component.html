@@ -1,0 +1,63 @@
+<mat-card>
+    <mat-card-title>Edit Task</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()">
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            [(ngModel)]="formData.title"
+            name="title"
+            required
+          />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="formData.description"
+            name="description"
+            required
+          ></textarea>
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Deadline</mat-label>
+          <input
+            matInput
+            type="date"
+            [(ngModel)]="formData.deadline"
+            name="deadline"
+            required
+          />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Budget</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="formData.budget"
+            name="budget"
+          />
+        </mat-form-field>
+  
+        <mat-form-field appearance="fill">
+          <mat-label>Status</mat-label>
+          <mat-select [(value)]="formData.status" name="status">
+            <mat-option value="open">Open</mat-option>
+            <mat-option value="in_progress">In Progress</mat-option>
+            <mat-option value="completed">Completed</mat-option>
+            <mat-option value="cancelled">Cancelled</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit">
+          Update Task
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  

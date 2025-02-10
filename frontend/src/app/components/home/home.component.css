@@ -1,38 +1,79 @@
+/* Anonymous section */
 .home-anonymous {
   text-align: center;
   margin: 2rem auto;
-  max-width: 600px;
+  max-width: 0.9 rem; /* Increased width */
+  padding: 2rem;
+  border-radius: 12px; /* Soft edges */
+  background-color: #28666e; /* Teal green for the background */
+  color: #ffffff; /* White text for contrast */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
-.home-anonymous .buttons {
-  margin-top: 1rem;
-}
-
-.home-anonymous .buttons a {
-  display: inline-block;
-  margin: 0.5rem;
-  text-decoration: none;
-  background: #1565c0;
-  color: #ffffff;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-}
-
+/* Logged-in section */
 .home-logged-in {
-  max-width: 800px;
+  max-width: 900px; /* Increased width */
   margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px; /* Soft edges */
+  background-color: #28666e; /* Teal green for the background */
+  color: #ffffff; /* White text for contrast */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
+/* No projects message */
 .no-projects-msg {
   font-style: italic;
-  color: #666;
-  margin-bottom: 1rem;
+  color: #fedc97; /* Light yellow for emphasis */
+  background-color: rgba(255, 255, 255, 0.1); /* Subtle background */
+  padding: 1rem;
+  border-radius: 8px; /* Rounded corners */
+  border: 2px dashed #fedc97; /* Dashed yellow border */
+  margin-bottom: 1.5rem;
 }
 
+/* Project card styles */
 .project-card {
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+  border-radius: 12px; /* Rounded corners for project card container */
 }
 
+/* Material card styles */
 mat-card {
+  background-color: #7c9885; /* Sage green for card background */
+  color: #ffffff; /* White text for contrast */
+  border-radius: 12px; /* Rounded corners */
+  padding: 1.5rem;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+mat-card:hover {
+  transform: scale(1.03); /* Slight zoom on hover */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
+}
+
+/* Material card header styles */
+mat-card-header {
+  border-bottom: 1px solid #fedc97; /* Light yellow separator */
   margin-bottom: 1rem;
+}
+
+mat-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fedc97; /* Light yellow for titles */
+}
+
+mat-card-subtitle {
+  font-size: 1rem;
+  color: #b5b682; /* Light green for subtitles */
+}
+
+/* Buttons within material cards */
+mat-card-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ffffff; /* White text for descriptions */
 }
